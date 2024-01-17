@@ -1,0 +1,8 @@
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
+PasswordAuthentication yes
+
+PermitRootLogin yes
+
+port=22
