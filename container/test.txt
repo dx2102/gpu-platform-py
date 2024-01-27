@@ -2,10 +2,10 @@
 cd container
 docker build -t my-python-env .
 docker rm -f $(docker ps -aq)
-docker run -d -p 10000:22 -p 10001:8888 --name my-python-env my-python-env
+docker run -d -p 10000:22 -p 10001:8888 -e PASSWORD=test\
+    --name my-python-env my-python-env
 docker logs my-python-env
 sleep 0.1
-curl ifconfig.io
 ssh root@localhost -p 10000
 
 docker exec -it my-python-env bash
