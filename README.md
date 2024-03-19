@@ -2,9 +2,20 @@
 ## What is this?
 This is a simple web project to help manage GPU machines using Docker. It is like a simple web version of Docker Desktop. 
 
-## Components
+## What is Docker?
 
-Frontend code is in the `gpu-platform-vue` repo. The frontend uses Vue, Naive UI, and Tailwind CSS. The backend uses FastAPI and Docker SDK for Python.
+Docker is like a weaker and more lightweight version of a virtual machine. 
+
+You can start multiple Docker containers on the same machine. Each container will behave like an isolated operating system. 
+
+Docker is more lightweight than virutal machine in that all containers share the same kernel of the host operating system. A lot of mechanisms are achieved using renaming rather than simulating. Therefore Docker starts faster and uses less resources than virtual machines.
+
+Besides merely creating containers, you can manage images, volumes, and networks of containers. Docker Hub is a cloud repository to store images. You can also orchestrate containers on different machines using Docker Compose or Kubernetes to achieve things like auto-scaling, auto-recovery, load balancing, etc.
+
+
+## Project components
+
+Frontend code is in the `gpu-platform-vue` repo. The frontend uses Vue, Naive UI, and Tailwind CSS. The backend uses FastAPI and Docker Python SDK.
 
 This is a very simple project, but it demonstrates basic configuration for FastAPI and Vue, as well as JWT authentication.
 
