@@ -2,13 +2,17 @@
 ## What is this?
 This is a simple web project to help manage GPU machines using Docker. It is like a simple web version of Docker Desktop. 
 
+Users can visit the website, and create containers on a remote machine, possibly with GPU configurations. Users can connect to jupyter notebooks or ssh deamons in the containers. They can also manage containers, images, and volumes.
+
 ## What is Docker?
 
 Docker is like a weaker and more lightweight version of a virtual machine. 
 
 You can start multiple Docker containers on the same machine. Each container will behave like an isolated operating system. 
 
-Docker is more lightweight than virutal machine in that all containers share the same kernel of the host operating system. A lot of mechanisms are achieved using renaming rather than simulating. Therefore Docker starts faster and uses less resources than virtual machines.
+Docker is more lightweight than virutal machine in that all containers share the same kernel of the host operating system. A lot of mechanisms are achieved using renaming rather than simulating. Therefore Docker starts faster and uses less resources than virtual machines. Docker essentially only works on Linux, but it can be used on Windows and Mac based on a virtual machine. Docker is written in Go.
+
+Therefore Docker is a perfect tool for unifying environments and simplifying installations. It's an analogy to "dockers" in the real world, which are standardized containers for shipping goods.
 
 Besides merely creating containers, you can manage images, volumes, and networks of containers. Docker Hub is a cloud repository to store images. You can also orchestrate containers on different machines using Docker Compose or Kubernetes to achieve things like auto-scaling, auto-recovery, load balancing, etc.
 
