@@ -1,0 +1,14 @@
+2024-03-19 22:52:27,669 - DEBUG - This is a debug message
+2024-03-19 22:52:27,669 - INFO - This is an info message
+2024-03-19 22:52:27,669 - WARNING - This is a warning message
+2024-03-19 22:52:27,669 - ERROR - This is an error message
+2024-03-19 22:52:27,669 - CRITICAL - This is a critical message
+2024-03-19 22:52:28,220 - DEBUG - loaded lazy attr 'SafeConfigParser': <class 'configparser.ConfigParser'>
+2024-03-19 22:52:28,220 - DEBUG - loaded lazy attr 'NativeStringIO': <class '_io.StringIO'>
+2024-03-19 22:52:28,220 - DEBUG - loaded lazy attr 'BytesIO': <class '_io.BytesIO'>
+2024-03-19 22:52:28,223 - DEBUG - registered 'bcrypt' handler: <class 'passlib.handlers.bcrypt.bcrypt'>
+2024-03-19 22:52:28,231 - DEBUG - Trying paths: ['/root/.docker/config.json', '/root/.dockercfg']
+2024-03-19 22:52:28,231 - DEBUG - No config file found
+2024-03-19 22:52:28,231 - DEBUG - Trying paths: ['/root/.docker/config.json', '/root/.dockercfg']
+2024-03-19 22:52:28,231 - DEBUG - No config file found
+2024-03-19 22:52:28,241 - DEBUG - http://localhost:None "GET /version HTTP/1.1" 200 824

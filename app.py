@@ -4,7 +4,6 @@
 
 
 '''
-
 pip install jupyter docker fastapi[all] python-jose passlib
 code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
@@ -14,8 +13,11 @@ curl ifconfig.io
 uvicorn app:app --host 0.0.0.0 --port 80 --reload 
 nohup uvicorn app:app --host 0.0.0.0 --port 80 --reload &
 
+sudo lsof -i :80
+sudo kill ...
 '''
 
+import os
 import psutil
 import docker
 import random
@@ -26,19 +28,42 @@ from typing import Annotated, Union
 from enum import Enum
 from dataclasses import dataclass
 
+os.system("clear")
+def log(*args):
+    # blue bold print using \0xx escape
+    print("\033[1;34m", *args, "\033[0m", sep="")
+
+import starlette
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+
 app = FastAPI()
 @app.get("/ping")
-async def ping():
+async def ping(query: int = 0):
     return {"ping": "pong"}
 
-# mount the website, redirects
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse, FileResponse
-@app.get("/")
-async def root():
-    return RedirectResponse(url="/gpu-platform-vue/index.html")
-app.mount("/gpu-platform-vue", StaticFiles(directory="dist"), name="gpu-platform-vue")
+@app.get("/hi")
+async def hi():
+    return {"hi": "hello"}
+
+# mount the website, redirect to index.html if 404
+class SPAStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope):
+        try:
+            res = await super().get_response(path, scope)
+            return res
+        except starlette.exceptions.HTTPException as ex:
+            if ex.status_code == 404:
+                return RedirectResponse(url="/gpu-platform-vue")
+app.mount("/gpu-platform-vue", SPAStaticFiles(directory="./dist", html=True), name="gpu-platform-vue")
+
+
+
+
+
+
+# NOTE: long authentication part
 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -49,15 +74,11 @@ app.add_middleware(
     allow_origins=[
         "http://127.0.0.1:5173",
         "http://localhost:5173",
-        # "https://dx2102.github.io",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-from fastapi.testclient import TestClient
-client = TestClient(app)
 
 from jose import JWTError, jwt
 
@@ -65,15 +86,6 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 from pydantic import BaseModel
-
-
-
-
-
-
-
-
-# NOTE: authentication part
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -112,8 +124,6 @@ class User(BaseModel):
             new_lst.append(container)
         self.containers = new_lst
         return self.containers
-    
-
 
 users_db = {
     "admin": User(
@@ -127,7 +137,6 @@ users_db = {
         role=UserRole.guest,
     ),
 }
-# duckdb
 
 class Token(BaseModel):
     # Contains the jwt. Returned by /signup and /login
@@ -223,9 +232,7 @@ async def users_me(user: User = Depends(require_user)):
 # public_ip = requests.get('https://ipconfig.io/ip').text.strip()
 # print(f"Local IP: {public_ip}")
 public_ip = "150.109.4.158"
-print()
-print(f"Server is at: http://{public_ip}/gpu-platform-vue")
-print()
+log(f"Server is at: http://{public_ip}/gpu-platform-vue")
 
 daemon = docker.from_env()
 
@@ -320,26 +327,20 @@ def log_container_json(container):
         jupyter_token = token
         jupyter_command = f"http://{public_ip}:{jupyter_port}/lab?token={token}"
     
-    # cpus = container.attrs["HostConfig"]["CpusetCpus"]
-    # memory = container.attrs["HostConfig"]["MemorySwap"]
-    # gpus = container.attrs["HostConfig"]["DeviceRequests"]
-
     cpus = resource_per_gpu["cpus"]
     memory = resource_per_gpu["memory"]
     gpus = resource_per_gpu["gpus"]
 
-    keys = [
-        "short_id",
-        "status",
-        "cpus",
-        "memory",
-        "gpus",
-        "ssh_command",
-        "password",
-        "jupyter_command",
-    ]
-    vars = locals()
-    return {key: vars[key] for key in keys} 
+    return {
+        "short_id": short_id,
+        "status": status,
+        "cpus": cpus,
+        "memory": memory,
+        "gpus": gpus,
+        "ssh_command": ssh_command,
+        "password": password,
+        "jupyter_command": jupyter_command,
+    }
 
 
 
@@ -376,19 +377,6 @@ async def delete_container(id: str, user = Depends(require_member)):
     
 
 
-
-
-
-
-
-
-
-'''
-
-curl ifconfig.io
-uvicorn app:app --reload --host 0.0.0.0 --port 80
-
-'''
 
 
 
